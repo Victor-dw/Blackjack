@@ -1,0 +1,1 @@
+"""Signals routes (skeleton)."""

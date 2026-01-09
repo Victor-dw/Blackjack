@@ -1,0 +1,1 @@
+"""Coordinate multiple strategies (skeleton)."""

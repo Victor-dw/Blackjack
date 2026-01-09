@@ -1,0 +1,21 @@
+env: dev
+
+app:
+  name: blackjack-os
+  timezone: "Asia/Shanghai"
+
+redis:
+  url: "redis://redis:6379/0"
+  stream:
+    consumer_group: blackjack
+    block_ms: 5000
+
+postgres:
+  dsn: "postgresql://blackjack:blackjack@postgres:5432/blackjack"
+
+clickhouse:
+  url: "http://clickhouse:8123"
+
+execution:
+  # execution service must ONLY read approved commands and execute mechanically.
+  dry_run: true

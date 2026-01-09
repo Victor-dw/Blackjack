@@ -1,0 +1,138 @@
+version: "3.9"
+
+services:
+  # --- Data services ---
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: blackjack
+      POSTGRES_PASSWORD: blackjack
+      POSTGRES_DB: blackjack
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - compute-network
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - compute-network
+      - trade-network
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - chdata:/var/lib/clickhouse
+    networks:
+      - compute-network
+
+  # --- Core pipeline services (skeleton placeholders) ---
+  data-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.perception.service"]
+    depends_on: [redis, postgres]
+    networks:
+      - data-network
+      - compute-network
+
+  variable-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.variables.service"]
+    depends_on: [redis, postgres]
+    networks:
+      - compute-network
+
+  signal-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.signals.service"]
+    depends_on: [redis, postgres]
+    networks:
+      - compute-network
+
+  strategy-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.strategies.service"]
+    depends_on: [redis, postgres]
+    networks:
+      - compute-network
+
+  risk-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.risk.service"]
+    depends_on: [redis, postgres]
+    networks:
+      - compute-network
+
+  executor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.execution.service"]
+    depends_on: [redis]
+    networks:
+      - trade-network
+
+  postmortem:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.postmortem.service"]
+    depends_on: [redis, postgres]
+    networks:
+      - compute-network
+
+  # Evolution/backtest must be isolated from live execution.
+  backtest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.evolution.service"]
+    depends_on: [redis, postgres]
+    networks:
+      - compute-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.api.main"]
+    ports:
+      - "8000:8000"
+    depends_on: [redis, postgres]
+    networks:
+      - compute-network
+
+networks:
+  data-network:
+    name: blackjack-data-network
+  compute-network:
+    name: blackjack-compute-network
+  trade-network:
+    name: blackjack-trade-network
+  monitor-network:
+    name: blackjack-monitor-network
+
+volumes:
+  pgdata:
+  redisdata:
+  chdata:

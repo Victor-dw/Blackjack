@@ -1,0 +1,1 @@
+"""Trade record storage (skeleton)."""

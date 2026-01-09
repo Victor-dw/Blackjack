@@ -1,0 +1,1 @@
+"""miniQMT broker adapter (skeleton)."""

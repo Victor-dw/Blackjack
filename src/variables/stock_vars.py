@@ -1,0 +1,1 @@
+"""Stock variables (skeleton)."""

@@ -1,0 +1,6 @@
+name: trend_following
+enabled: true
+
+params:
+  opportunity_threshold: 60
+  max_positions: 10

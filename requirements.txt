@@ -1,0 +1,22 @@
+# Skeleton only.
+# Add dependencies via your chosen workflow (pip/uv/poetry) and pin versions later.
+
+# Web
+fastapi
+uvicorn
+
+# Config
+pydantic
+pydantic-settings
+
+# Infra
+redis
+psycopg
+clickhouse-connect
+
+# Observability
+structlog
+prometheus-client
+
+# Tests
+pytest

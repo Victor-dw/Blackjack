@@ -1,0 +1,11 @@
+# Risk limits (skeleton)
+portfolio:
+  max_gross_exposure: 1.0
+  max_single_position: 0.1
+
+trade:
+  max_risk_per_trade: 0.01
+  max_daily_loss: 0.03
+
+regime:
+  transition_block_new_positions: true

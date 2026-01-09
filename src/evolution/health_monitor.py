@@ -1,0 +1,1 @@
+"""Strategy health monitoring (skeleton)."""
