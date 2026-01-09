@@ -1,0 +1,29 @@
+{
+  "event_id": "evt-backtest-001",
+  "trace_id": "trace-backtest-001",
+  "produced_at": "2026-01-01T03:00:00+00:00",
+  "schema": "evolution.backtest.completed.v1",
+  "schema_version": 1,
+  "payload": {
+    "backtest_id": "bt-trend-20260101",
+    "strategy": "trend_following",
+    "start_date": "2025-01-01",
+    "end_date": "2025-12-31",
+    "metrics": {
+      "total_return": 0.156,
+      "sharpe_ratio": 1.24,
+      "max_drawdown": 0.089,
+      "win_rate": 0.58,
+      "profit_factor": 1.72,
+      "total_trades": 142
+    },
+    "parameters": {
+      "entry_threshold": 70,
+      "stop_loss_pct": 0.05,
+      "take_profit_pct": 0.15,
+      "kelly_fraction": 0.5
+    }
+  },
+  "source_service": "evolution-service"
+}
+

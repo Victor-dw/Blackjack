@@ -192,6 +192,52 @@ def validate_payload(schema: str, payload: dict[str, Any]) -> None:
         _require_str(payload, "broker")
         return
 
+    if schema == streams.POSTMORTEM_TRADE_RECORD_CREATED_V1:
+        _require_exact_keys(
+            payload,
+            required={"trade_id", "symbol", "ts", "status", "order", "decision_snapshot"},
+        )
+        _require_str(payload, "trade_id")
+        _require_str(payload, "symbol")
+        _parse_iso8601(_require_str(payload, "ts"))
+        status = _require_str(payload, "status")
+        if status not in {"EXECUTED", "FAILED", "PARTIAL"}:
+            raise ValueError("status must be EXECUTED/FAILED/PARTIAL")
+        if not isinstance(payload.get("order"), dict):
+            raise ValueError("order must be object")
+        if not isinstance(payload.get("decision_snapshot"), dict):
+            raise ValueError("decision_snapshot must be object")
+        return
+
+    if schema == streams.EVOLUTION_BACKTEST_COMPLETED_V1:
+        _require_exact_keys(
+            payload,
+            required={"backtest_id", "strategy", "start_date", "end_date", "metrics", "parameters"},
+        )
+        _require_str(payload, "backtest_id")
+        _require_str(payload, "strategy")
+        _require_str(payload, "start_date")
+        _require_str(payload, "end_date")
+        if not isinstance(payload.get("metrics"), dict):
+            raise ValueError("metrics must be object")
+        if not isinstance(payload.get("parameters"), dict):
+            raise ValueError("parameters must be object")
+        return
+
+    if schema == streams.EVOLUTION_PARAMETER_PROPOSED_V1:
+        _require_exact_keys(
+            payload,
+            required={"proposal_id", "strategy", "current_parameters", "proposed_parameters", "rationale"},
+        )
+        _require_str(payload, "proposal_id")
+        _require_str(payload, "strategy")
+        if not isinstance(payload.get("current_parameters"), dict):
+            raise ValueError("current_parameters must be object")
+        if not isinstance(payload.get("proposed_parameters"), dict):
+            raise ValueError("proposed_parameters must be object")
+        _require_str(payload, "rationale")
+        return
+
     # For new schemas: add v2 stream, then update this mapping.
     raise ValueError(f"unknown schema: {schema}")
 

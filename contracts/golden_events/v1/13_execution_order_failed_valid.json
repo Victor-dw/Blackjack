@@ -1,0 +1,17 @@
+{
+  "event_id": "evt-exec-002",
+  "trace_id": "trace-exec-002",
+  "produced_at": "2026-01-01T01:00:03+00:00",
+  "schema": "execution.order.failed.v1",
+  "schema_version": 1,
+  "payload": {
+    "order_id": "ord-002",
+    "symbol": "AAPL",
+    "ts": "2026-01-01T01:00:00+00:00",
+    "status": "FAILED",
+    "filled_qty": 0,
+    "avg_price": 0,
+    "broker": "qmt"
+  },
+  "source_service": "execution-service"
+}

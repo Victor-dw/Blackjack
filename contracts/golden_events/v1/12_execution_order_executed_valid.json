@@ -1,0 +1,17 @@
+{
+  "event_id": "evt-exec-001",
+  "trace_id": "trace-exec-001",
+  "produced_at": "2026-01-01T01:00:02+00:00",
+  "schema": "execution.order.executed.v1",
+  "schema_version": 1,
+  "payload": {
+    "order_id": "ord-001",
+    "symbol": "AAPL",
+    "ts": "2026-01-01T01:00:00+00:00",
+    "status": "EXECUTED",
+    "filled_qty": 10,
+    "avg_price": 0,
+    "broker": "qmt"
+  },
+  "source_service": "execution-service"
+}

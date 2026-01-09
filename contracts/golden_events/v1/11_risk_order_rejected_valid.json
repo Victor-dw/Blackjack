@@ -1,0 +1,21 @@
+{
+  "event_id": "evt-risk-002",
+  "trace_id": "trace-risk-002",
+  "produced_at": "2026-01-01T01:00:01+00:00",
+  "schema": "risk.order.rejected.v1",
+  "schema_version": 1,
+  "payload": {
+    "symbol": "AAPL",
+    "ts": "2026-01-01T01:00:00+00:00",
+    "can_trade": false,
+    "final_position_frac": 0.0,
+    "risk_per_trade": 0.0,
+    "reason": "defense_freeze",
+    "order": {
+      "order_id": "noop-002",
+      "side": "BUY",
+      "qty": 0
+    }
+  },
+  "source_service": "risk-service"
+}

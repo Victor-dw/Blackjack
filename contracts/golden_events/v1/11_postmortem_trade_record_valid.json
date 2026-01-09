@@ -1,0 +1,32 @@
+{
+  "event_id": "evt-postmortem-001",
+  "trace_id": "trace-postmortem-001",
+  "produced_at": "2026-01-01T02:00:00+00:00",
+  "schema": "postmortem.trade_record.created.v1",
+  "schema_version": 1,
+  "payload": {
+    "trade_id": "trd-evt-exec-001",
+    "symbol": "600000.SH",
+    "ts": "2026-01-01T01:30:00+00:00",
+    "status": "EXECUTED",
+    "order": {
+      "order_id": "ord-001",
+      "side": "BUY",
+      "qty": 100,
+      "filled_qty": 100,
+      "avg_price": 10.50,
+      "broker": "qmt-sandbox"
+    },
+    "decision_snapshot": {
+      "market_vars": {"valuation_percentile": 45.0},
+      "stock_vars": {"relative_strength": 65.0},
+      "signal_snapshot": {"opportunity_score": 72.0},
+      "regime_state": "BULL",
+      "strategy_triggered": "trend_following",
+      "kelly_calculation": {"f_star": 0.15, "conservative_factor": 0.5},
+      "risk_check_result": {"can_trade": true, "reason": "within_limits"}
+    }
+  },
+  "source_service": "postmortem-service"
+}
+

@@ -1,21 +1,25 @@
-# 6 人分工表
+# 10 人分工表（并行开发）
 
-## 角色分配
+## 角色分配（10 人）
 
 | 角色 | 负责模块 | 核心职责 | 交付物 |
 |------|----------|----------|--------|
-| **P1 底座** | core, contracts, infra | 消息总线、契约验证、Docker、CI | message_bus, validation, compose |
-| **P2 数据** | L1 perception, L2 variables | 行情采集、因子计算 | data_collector, market_vars, stock_vars |
-| **P3 信号** | L3 signals | 信号合成、市场状态识别 | signal_composer, regime_detector |
-| **P4 策略** | L4 strategies | 策略逻辑、动作生成 | base_strategy, trend/mean/event |
-| **P5 风控执行** | L5 risk, L6 execution | 风控审批、订单执行 | kelly, defense, executor, QMT适配 |
-| **P6 旁路质量** | L7 postmortem, L8 evolution, 联调 | 复盘、回测、集成测试 | trade_recorder, backtest_engine, harness |
+| **P1 底座** | core, contracts, infra | 消息总线、契约验证、Docker/Compose 隔离、CI | message_bus, validation, compose, CI |
+| **P2A 数据采集** | L1 perception | 行情采集/清洗/标准化（先 stub + 回放） | data_collector + cleaners |
+| **P2B 变量计算** | L2 variables | 变量计算框架 + 归一化（先最小集合） | market_vars, stock_vars, normalizer |
+| **P3A 信号-机会** | L3 signals | opportunity_score 计算与合成 | signal_composer |
+| **P3B 信号-Regime** | L3 signals | regime_state 检测（牛熊/震荡/跳变） | regime_detector |
+| **P4A 策略-趋势** | L4 strategies | 趋势策略（MVP 规则） | trend_following |
+| **P4B 策略-均值/事件** | L4 strategies | 均值回归 + 事件驱动策略（MVP 规则） | mean_reversion, event_driven |
+| **P4C 策略协调** | L4 strategies | 多策略协调/冲突解决 | coordinator |
+| **P5 风控执行** | L5 risk, L6 execution | 风控审批、仓位计算、执行 dry-run（QMT 最后接） | kelly, defense, allocator, executor |
+| **P6 旁路质量** | L7 postmortem, L8 evolution, 联调 | 复盘、回测、集成测试/回放器 | trade_recorder, backtest_engine, harness |
 
 ---
 
 ## 详细任务清单
 
-### P1 底座（已完成 80%）
+### P1 底座（目标：100%）
 
 | 任务 | 状态 | 说明 |
 |------|------|------|
@@ -23,8 +27,8 @@
 | ✅ contracts/validation.py | 完成 | v1 严格校验 |
 | ✅ golden_events/ | 完成 | 10 个测试向量 |
 | ✅ docker-compose.yml | 完成 | 网络隔离 |
-| ⬜ CI pipeline | 待做 | GitHub Actions: pytest + compileall |
-| ⬜ replay 工具 | 待做 | 用于联调的事件回放脚本 |
+| ✅ replay 工具 | 完成 | `tools/replay/publish_golden_events.py`（默认跳过 invalid） |
+| ✅ CI pipeline | 完成 | GitHub Actions: pytest + compileall |
 
 ### P2 数据
 
@@ -86,5 +90,5 @@ P1 底座 ───────────────────────�
     └── P6 旁路质量 ←──────────────────────────────────────┘
 ```
 
-**关键点：P1 已完成 80%，其他 5 人可立即并行开发。**
+**关键点：P1 已完成（地基稳定），其余 9 人可立即并行开发。**
 
