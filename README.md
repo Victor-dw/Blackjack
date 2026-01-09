@@ -22,8 +22,13 @@ The system follows an **8-layer pipeline**:
 
    - `docker compose up -d`
 
+   Execution is **physically isolated** and not started by default:
+   - Sandbox execution (compute-plane only): `docker compose --profile dry up -d`
+   - Live execution (trade-plane + bridge): `docker compose --profile live up -d`
+
 3. Start API locally (when deps are installed):
 
    - `python -m src.api.main`
 
 See `docs/STANDARDS.md` for development conventions.
+See `docs/CONTRACTS.md` for stream contracts and golden events.

@@ -1,0 +1,19 @@
+{
+  "event_id": "evt-md-001",
+  "trace_id": "trace-001",
+  "produced_at": "2026-01-01T00:00:00+00:00",
+  "schema": "perception.market_data.collected.v1",
+  "schema_version": 1,
+  "payload": {
+    "symbol": "AAPL",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "timeframe": "1m",
+    "open": 100.0,
+    "high": 101.0,
+    "low": 99.5,
+    "close": 100.5,
+    "volume": 1234,
+    "source": "demo"
+  },
+  "source_service": "perception-service"
+}

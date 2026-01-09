@@ -1,0 +1,20 @@
+{
+  "event_id": "evt-extra-001",
+  "trace_id": "trace-extra",
+  "produced_at": "2026-01-01T00:30:00+00:00",
+  "schema": "perception.market_data.collected.v1",
+  "schema_version": 1,
+  "payload": {
+    "symbol": "AAPL",
+    "ts": "2026-01-01T00:30:00+00:00",
+    "timeframe": "1m",
+    "open": 100.0,
+    "high": 101.0,
+    "low": 99.0,
+    "close": 100.0,
+    "volume": 1,
+    "source": "demo",
+    "extra": "not-allowed-in-v1"
+  },
+  "source_service": "perception-service"
+}

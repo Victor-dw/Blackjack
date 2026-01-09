@@ -15,7 +15,7 @@ services:
     networks:
       - compute-network
 
-  redis:
+  redis-compute:
     image: redis:7
     command: ["redis-server", "--appendonly", "yes"]
     ports:
@@ -24,6 +24,15 @@ services:
       - redisdata:/data
     networks:
       - compute-network
+
+  # Trade-plane Redis is physically isolated (only started in live profile).
+  redis-trade:
+    image: redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    profiles: ["live"]
+    volumes:
+      - redistrade:/data
+    networks:
       - trade-network
 
   clickhouse:
@@ -42,7 +51,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.perception.service"]
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - data-network
       - compute-network
@@ -52,7 +61,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.variables.service"]
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - compute-network
 
@@ -61,7 +70,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.signals.service"]
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - compute-network
 
@@ -70,7 +79,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.strategies.service"]
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - compute-network
 
@@ -79,16 +88,48 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.risk.service"]
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - compute-network
 
-  executor:
+  # Execution is never started by default.
+  # Use `--profile dry` for sandbox execution, or `--profile live` for real execution.
+  executor-dry:
     build:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.execution.service"]
-    depends_on: [redis]
+    profiles: ["dry"]
+    depends_on: [redis-compute]
+    environment:
+      BLACKJACK_REDIS_URL: "redis://redis-compute:6379/0"
+    networks:
+      - compute-network
+
+  # Trade bridge is the *only* network connector from compute-plane → trade-plane.
+  trade-bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.trade_bridge.service"]
+    profiles: ["live"]
+    depends_on: [redis-compute, redis-trade]
+    environment:
+      BLACKJACK_REDIS_URL: "redis://redis-compute:6379/0"
+      BLACKJACK_REDIS_TRADE_URL: "redis://redis-trade:6379/0"
+    networks:
+      - compute-network
+      - trade-network
+
+  executor-live:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "src.execution.service"]
+    profiles: ["live"]
+    depends_on: [redis-trade]
+    environment:
+      BLACKJACK_REDIS_URL: "redis://redis-trade:6379/0"
     networks:
       - trade-network
 
@@ -97,7 +138,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.postmortem.service"]
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - compute-network
 
@@ -107,7 +148,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python", "-m", "src.evolution.service"]
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - compute-network
 
@@ -118,7 +159,7 @@ services:
     command: ["python", "-m", "src.api.main"]
     ports:
       - "8000:8000"
-    depends_on: [redis, postgres]
+    depends_on: [redis-compute, postgres]
     networks:
       - compute-network
 
@@ -135,4 +176,5 @@ networks:
 volumes:
   pgdata:
   redisdata:
+  redistrade:
   chdata:

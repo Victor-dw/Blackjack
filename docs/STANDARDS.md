@@ -11,6 +11,12 @@ This standard is derived from `docs/ARCHITECTURE.md` and applies to all future d
 3. **Decision vs outcome separation**
    - Post-mortem stores full decision snapshots.
 
+4. **Execution physical isolation (mandatory)**
+   - Execution is not started by default.
+   - Use compose profile `dry` for sandbox execution (compute-network only).
+   - Use compose profile `live` for real execution (trade-network only).
+   - Only `trade-bridge` may connect compute-network ↔ trade-network.
+
 ### 2. Layer boundaries
 
 - Perception → Variables → Signals → Strategies → Risk → Execution → Postmortem → Evolution
@@ -21,6 +27,8 @@ This standard is derived from `docs/ARCHITECTURE.md` and applies to all future d
 - Stream name pattern: `<layer>.<entity>.<event>.v<version>`
 - Each message must include: `event_id`, `trace_id`, `produced_at`, `schema`, `schema_version`, `payload`
 - Breaking changes publish a new `v2` stream.
+
+See `docs/CONTRACTS.md` for the frozen v1 schema and golden events.
 
 ### 4. Config rules
 

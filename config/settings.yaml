@@ -5,7 +5,10 @@ app:
   timezone: "Asia/Shanghai"
 
 redis:
-  url: "redis://redis:6379/0"
+  # compute-plane bus
+  url: "redis://redis-compute:6379/0"
+  # trade-plane bus (only present when compose profile `live` is enabled)
+  trade_url: "redis://redis-trade:6379/0"
   stream:
     consumer_group: blackjack
     block_ms: 5000

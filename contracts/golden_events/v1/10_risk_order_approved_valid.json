@@ -1,0 +1,21 @@
+{
+  "event_id": "evt-risk-001",
+  "trace_id": "trace-risk-001",
+  "produced_at": "2026-01-01T01:00:00+00:00",
+  "schema": "risk.order.approved.v1",
+  "schema_version": 1,
+  "payload": {
+    "symbol": "AAPL",
+    "ts": "2026-01-01T01:00:00+00:00",
+    "can_trade": true,
+    "final_position_frac": 0.25,
+    "risk_per_trade": 0.01,
+    "reason": "within_limits",
+    "order": {
+      "order_id": "ord-001",
+      "side": "BUY",
+      "qty": 10
+    }
+  },
+  "source_service": "risk-service"
+}
